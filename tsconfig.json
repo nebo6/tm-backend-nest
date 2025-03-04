@@ -19,9 +19,11 @@
 		"strict": true,
 		"strictPropertyInitialization": false,
 		"moduleResolution": "node",
-		"baseUrl": "./src/",
+		"baseUrl": "./src",
 		"paths": {
-			"@modules": ["models/*"]
+			"@modules/*": ["models/*"],
+			"@config/*": ["config/*"],
+			"@common/*": ["common/*"]
 		}
 	}
 }

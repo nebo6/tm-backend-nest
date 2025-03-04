@@ -1,19 +1,28 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailModule } from '@common/mail/mail.module';
+import { CustomI18nModule } from '@common/i18n/i18n.module';
+import { getDbConfig } from '@config/db.config.module';
+import { AuthModule } from 'modules/auth/auth.module';
+import { UsersModule } from 'modules/users/users.module';
+import { ProfilesModule } from 'modules/profiles/profiles.module';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
-		TypeOrmModule.forRoot({
-			type: 'postgres',
-			url: process.env.DATABASE_URL,
-			autoLoadEntities: true, // Автоматически подключает сущности
-			synchronize: true, // Включает автоматическое создание таблиц (ТОЛЬКО ДЛЯ РАЗРАБОТКИ)
-			ssl: { rejectUnauthorized: false },
+		ConfigModule.forRoot({ isGlobal: true }),
+		TypeOrmModule.forRootAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useFactory: (configService: ConfigService) => getDbConfig(configService),
 		}),
+		MailModule,
+		CustomI18nModule,
+		AuthModule,
+		UsersModule,
+		ProfilesModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

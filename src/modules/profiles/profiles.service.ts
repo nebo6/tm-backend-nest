@@ -12,6 +12,10 @@ export class ProfilesService {
 		private readonly i18n: I18nService,
 	) {}
 
+	async findAll() {
+		return await this.profileRepository.find();
+	}
+
 	async findById(id: number) {
 		const profile = await this.profileRepository.findOne({ where: { id } });
 

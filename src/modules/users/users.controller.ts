@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -8,5 +8,11 @@ export class UsersController {
 	@Get()
 	async getAll() {
 		return this.usersService.findAll();
+	}
+
+	@Delete(':id')
+	async delete(@Param('id') id: string) {
+		await this.usersService.delete(Number(id));
+		return { message: 'User and profile deleted' };
 	}
 }

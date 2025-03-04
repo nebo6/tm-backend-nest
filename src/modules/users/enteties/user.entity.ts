@@ -21,7 +21,10 @@ export class User {
 	@Column()
 	isActive: boolean;
 
-	@OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+	@OneToOne(() => Profile, (profile) => profile.user, {
+		cascade: true,
+		onDelete: 'CASCADE',
+	})
 	@JoinColumn()
 	profile: Profile;
 }

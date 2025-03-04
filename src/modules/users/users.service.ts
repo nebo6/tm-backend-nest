@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+	ConflictException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -35,6 +39,9 @@ export class UsersService {
 			email,
 			password: hashedPassword,
 			isActive: false,
+			profile: {
+				fullName: email,
+			},
 		});
 
 		await this.userRepository.save(user);
@@ -59,5 +66,18 @@ export class UsersService {
 
 		user.isActive = true;
 		return this.userRepository.save(user);
+	}
+
+	async delete(id: number): Promise<void> {
+		const user = await this.userRepository.findOne({
+			where: { id },
+			relations: ['profile'],
+		});
+
+		if (!user) {
+			throw new NotFoundException(this.i18n.t('error_message.not_found.user'));
+		}
+
+		await this.userRepository.remove(user); // Профиль удалится автоматически
 	}
 }

@@ -21,7 +21,7 @@ export class ProfilesService {
 
 		if (!profile)
 			throw new NotFoundException(
-				this.i18n.t('error_message.not_found.profile'),
+				this.i18n.translate('error_message.not_found.profile'),
 			);
 
 		return profile;

@@ -21,7 +21,10 @@ export class AuthService {
 		const { data: user } = await this.usersService.create({
 			...dto,
 		});
-		return this._generateToken(user.id, user.email);
+		return {
+			...this._generateToken(user.id, user.email),
+			id: user.id,
+		};
 	}
 
 	async login({ email, password }: { email: string; password: string }) {
@@ -33,7 +36,7 @@ export class AuthService {
 		const user = await this.usersService.activateUser(email);
 		if (!user)
 			throw new BadRequestException(
-				this.i18n.t('error_message.not_found.user'),
+				this.i18n.translate('error_message.not_found.user'),
 			);
 
 		return await this.login(user);
@@ -48,7 +51,7 @@ export class AuthService {
 		const user = await this.usersService.findByEmail(email);
 		if (!user || !(await bcrypt.compare(password, user.password))) {
 			throw new UnauthorizedException(
-				this.i18n.t('error_message.unauthorized'),
+				this.i18n.translate('error_message.unauthorized'),
 			);
 		}
 		return user;

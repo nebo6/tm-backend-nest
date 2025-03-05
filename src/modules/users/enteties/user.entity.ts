@@ -1,11 +1,5 @@
 import { Profile } from 'modules/profiles/entities/profile.entity';
-import {
-	Column,
-	Entity,
-	JoinColumn,
-	OneToOne,
-	PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -23,8 +17,6 @@ export class User {
 
 	@OneToOne(() => Profile, (profile) => profile.user, {
 		cascade: true,
-		onDelete: 'CASCADE',
 	})
-	@JoinColumn()
 	profile: Profile;
 }

@@ -12,10 +12,6 @@ export class ProfilesController {
 
 	@Get(':id')
 	async get(@Param('id') id: string) {
-		console.log(id);
-
-		const profile = await this.profilesService.findById(Number(id));
-
-		return profile;
+		return await this.profilesService.findById(Number(id));
 	}
 }

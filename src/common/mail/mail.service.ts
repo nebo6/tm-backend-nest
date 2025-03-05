@@ -18,8 +18,8 @@ export class MailService {
 		);
 		const activationLink = `${host}/auth/activate?email=${email}`;
 
-		const subject = this.i18n.t('mailer.activation_subject');
-		const text = this.i18n.t('mailer.activation_text', {
+		const subject = this.i18n.translate('mailer.activation_subject');
+		const text = this.i18n.translate('mailer.activation_text', {
 			args: { link: activationLink },
 		});
 

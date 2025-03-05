@@ -79,5 +79,6 @@ export class UsersService {
 		}
 
 		await this.userRepository.remove(user); // Профиль удалится автоматически
+		return this.i18n.t('success_message.deleted.user');
 	}
 }

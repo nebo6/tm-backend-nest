@@ -12,7 +12,7 @@ export class UsersController {
 
 	@Delete(':id')
 	async delete(@Param('id') id: string) {
-		await this.usersService.delete(Number(id));
-		return { message: 'User and profile deleted' };
+		const message = await this.usersService.delete(Number(id));
+		return { message };
 	}
 }

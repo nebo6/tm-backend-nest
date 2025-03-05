@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { I18nService } from 'nestjs-i18n';
 import { MailService } from '@common/mail/mail.service';
-import { User } from './enteties/user.entity';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()

@@ -7,7 +7,10 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { I18nService } from 'nestjs-i18n';
 import { UsersService } from '../users/users.service';
+import { UserRole } from '../users/entities/user.entity';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+
+type LoginProps = { email: string; password: string; role: UserRole };
 
 @Injectable()
 export class AuthService {
@@ -18,18 +21,20 @@ export class AuthService {
 	) {}
 
 	async register(dto: CreateUserDto) {
-		const { data: user } = await this.usersService.create({
+		const {
+			data: { email, role, id: userId },
+		} = await this.usersService.create({
 			...dto,
 		});
 		return {
-			...this._generateToken(user.id, user.email),
-			id: user.id,
+			...this._generateToken(userId, { email, role }),
+			id: userId,
 		};
 	}
 
-	async login({ email, password }: { email: string; password: string }) {
-		const user = await this._validateUser(email, password);
-		return this._generateToken(user.id, user.email);
+	async login(data: LoginProps) {
+		const user = await this._validateUser(data);
+		return this._generateToken(user.id, { email: user.email, role: user.role });
 	}
 
 	async activate(email: string) {
@@ -42,14 +47,17 @@ export class AuthService {
 		return await this.login(user);
 	}
 
-	private _generateToken(userId: number, email: string) {
-		const payload = { sub: userId, email };
+	private _generateToken(
+		userId: number,
+		{ email, role }: Omit<LoginProps, 'password'>,
+	) {
+		const payload = { sub: userId, email, role };
 		return { access_token: this.jwtService.sign(payload) };
 	}
 
-	private async _validateUser(email: string, password: string) {
-		const user = await this.usersService.findByEmail(email);
-		if (!user || !(await bcrypt.compare(password, user.password))) {
+	private async _validateUser(data: LoginProps) {
+		const user = await this.usersService.findByEmail(data.email);
+		if (!user || !(await bcrypt.compare(data.password, user.password))) {
 			throw new UnauthorizedException(
 				this.i18n.translate('error_message.unauthorized'),
 			);

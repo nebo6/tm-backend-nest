@@ -21,9 +21,12 @@
 		"moduleResolution": "node",
 		"baseUrl": "./src",
 		"paths": {
-			"@modules/*": ["models/*"],
+			"@modules/*": ["modules/*"],
 			"@config/*": ["config/*"],
-			"@common/*": ["common/*"]
+			"@common/*": ["common/*"],
+			"@guards/*": ["guards/*"],
+			"@strategies/*": ["strategies/*"],
+			"@types/*": ["types/*"]
 		}
 	}
 }
